@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>West Bengal Medical Council - Counseling Fee Payment</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-hover: #1d4ed8;
+            --secondary: #0f766e;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --error: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .header {
+            background-color: var(--primary);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .bank-info {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 12px 16px;
+            margin: 20px 24px 10px 24px;
+            border-radius: 4px;
+            font-size: 0.88rem;
+        }
+
+        .bank-info strong {
+            color: var(--primary);
+        }
+
+        form {
+            padding: 24px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 14px;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #334155;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
+        }
+
+        .amount-box {
+            background-color: #f1f5f9;
+            padding: 12px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* Payment Tabs */
+        .payment-methods {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .method-btn {
+            flex: 1;
+            padding: 10px 6px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .method-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 14px;
+            border: 1px dashed var(--border);
+            border-radius: 6px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .qr-container {
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            background: #e2e8f0;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        /* Captcha */
+        .captcha-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .captcha-code {
+            background: #27272a;
+            color: #38bdf8;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 4px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            user-select: none;
+            font-style: italic;
+            text-decoration: line-through;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.82rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        /* Success Receipt Page */
+        #receipt-screen {
+            display: none;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #dcfce7;
+            color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 16px auto;
+        }
+
+        .receipt-title {
+            color: var(--success);
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .receipt-table th, .receipt-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .receipt-table th {
+            color: var(--muted);
+            width: 45%;
+        }
+
+        .receipt-table td {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 12px;
+            background-color: #f1f5f9;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-print {
+            flex: 1;
+            padding: 12px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-print:hover {
+            background-color: #0d9488;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                max-width: 100%;
+            }
+            .btn-group {
+                display: none;
+            }
+            .bank-info {
+                border-left: 2px solid #000;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- PAYMENT FORM SCREEN -->
+    <div id="payment-screen">
+        <div class="header">
+            <h1>West Bengal Medical Council</h1>
+            <p>Candidate please submit the fees for registration to WBMCC counseling for MBBS/BDS 2026 in state deemed medical colleges</p>
+        </div>
+
+        <!-- Receiver Bank Info Notice -->
+        <div class="bank-info">
+            <strong>Receiver Bank Account Details:</strong><br>
+            West Bengal State Health & Family Welfare Department | Punjab National Bank, Salt Lake Branch<br>
+            A/C No: 1432050006415| IFSC: PUNB0143220
+        </div>
+
+        <form id="paymentForm" onsubmit="handlePayment(event)">
+            
+            <div class="section-title">Candidate Information</div>
+
+            <div class="form-group">
+                <label for="fullName">Full Name *</label>
+                <input type="text" id="fullName" placeholder="Enter candidate name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="appNo">Application Number *</label>
+                <input type="text" id="appNo" placeholder="Enter application number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mobileNo">Mobile Number *</label>
+                <input type="tel" id="mobileNo" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
+            </div>
+
+            <div class="amount-box">
+                <span>Registration Fee Payable:</span>
+                <span>₹ 3500.00</span>
+            </div>
+
+            <div class="section-title">Select Payment Method</div>
+
+            <div class="payment-methods">
+                <button type="button" class="method-btn active" onclick="switchMethod('upi_id')">UPI ID</button>
+                <button type="button" class="method-btn" onclick="switchMethod('upi_qr')">UPI QR Code</button>
+                <button type="button" class="method-btn" onclick="switchMethod('card')">Credit / Debit Card</button>
+            </div>
+
+            <!-- UPI ID Tab -->
+            <div id="upi_id_tab" class="tab-content active">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="upiIdInput">VPA / UPI ID</label>
+                    <input type="text" id="upiIdInput" placeholder="example@upi">
+                </div>
+            </div>
+
+            <!-- UPI QR Code Tab -->
+            <div id="upi_qr_tab" class="tab-content">
+                <div class="qr-container">
+                    <p style="font-size: 0.85rem; color: var(--muted);">Scan this QR Code using any UPI App</p>
+                    <div class="qr-code">
+                        <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM10 3h1v4h-1zM10 9h1v2h-1zM13 3h1v2h-1zM13 7h2v2h-2zM18 10h3v1h-3zM15 15h2v2h-2zM19 15h2v2h-2zM15 19h2v2h-2zM17 17h2v2h-2zM11 13h2v2h-2zM10 17h3v1h-3zM13 19h1v2h-1z"/>
+                        </svg>
+                    </div>
+                    <p style="font-size: 0.8rem; font-weight: bold; color: var(--primary);">Amount: ₹ 3500.00</p>
+                </div>
+            </div>
+
+            <!-- Credit/Debit Card Tab -->
+            <div id="card_tab" class="tab-content">
+                <div class="form-group">
+                    <label>Card Number</label>
+                    <input type="text" placeholder="16-digit card number" maxlength="16">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 2;">
+                        <label>Expiry Date</label>
+                        <input type="text" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>CVV</label>
+                        <input type="password" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">Security Verification</div>
+
+            <div class="form-group">
+                <label>Enter Captcha *</label>
+                <div class="captcha-box">
+                    <div id="captchaCode" class="captcha-code"></div>
+                    <button type="button" class="refresh-btn" onclick="generateCaptcha()" title="Refresh Captcha">&#21540;</button>
+                </div>
+                <input type="text" id="captchaInput" placeholder="Type the characters above" required>
+                <div id="captchaError" class="error-message">Invalid Captcha. Please try again.</div>
+            </div>
+
+            <button type="submit" class="btn-submit">Pay ₹ 3500.00 and Proceed</button>
+        </form>
+    </div>
+
+    <!-- SUCCESS RECEIPT SCREEN -->
+    <div id="receipt-screen">
+        <div class="success-icon">&#10003;</div>
+        <div class="receipt-title">Candidate Successfully Registered</div>
+        <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 20px;">
+            Your registration fee has been successfully processed. Please keep this receipt for your reference.
+        </p>
+
+        <table class="receipt-table">
+            <tr>
+                <th>Transaction Number</th>
+                <td id="res-txn-id">-</td>
+            </tr>
+            <tr>
+                <th>Candidate Name</th>
+                <td id="res-name">-</td>
+            </tr>
+            <tr>
+                <th>Application Number</th>
+                <td id="res-app">-</td>
+            </tr>
+            <tr>
+                <th>Mobile Number</th>
+                <td id="res-mobile">-</td>
+            </tr>
+            <tr>
+                <th>Value Received</th>
+                <td style="color: var(--success);">₹ 3500.00</td>
+            </tr>
+            <tr>
+                <th>Beneficiary Bank</th>
+                <td>Punjab National Bank, Salt Lake Branch</td>
+            </tr>
+            <tr>
+                <th>Beneficiary Account</th>
+                <td>West Bengal Medical Council<br><span style="font-size: 0.8rem; color: var(--muted);">(A/C: 1432050006415| IFSC: PUNB0143220)</span></td>
+            </tr>
+            <tr>
+                <th>Date & Time</th>
+                <td id="res-date">-</td>
+            </tr>
+        </table>
+
+        <div class="btn-group">
+            <button class="btn-secondary" onclick="window.location.href='https://www.instagram.com/?hl=en';">
+  Return to Candidate Login
+</button>
+            <button class="btn-print" onclick="window.print()">Print Payment Confirmation Receipt</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let currentCaptcha = '';
+
+    // Generate real-time Captcha
+    function generateCaptcha() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        currentCaptcha = result;
+        document.getElementById('captchaCode').innerText = result;
+        document.getElementById('captchaInput').value = '';
+        document.getElementById('captchaError').style.display = 'none';
+    }
+
+    // Switch payment tabs
+    function switchMethod(method) {
+        document.querySelectorAll('.method-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+
+        if (method === 'upi_id') {
+            event.target.classList.add('active');
+            document.getElementById('upi_id_tab').classList.add('active');
+        } else if (method === 'upi_qr') {
+            event.target.classList.add('active');
+            document.getElementById('upi_qr_tab').classList.add('active');
+        } else if (method === 'card') {
+            event.target.classList.add('active');
+            document.getElementById('card_tab').classList.add('active');
+        }
+    }
+
+    // Process payment and display success screen
+    function handlePayment(e) {
+        e.preventDefault();
+
+        const userCaptcha = document.getElementById('captchaInput').value.trim();
+        if (userCaptcha !== currentCaptcha) {
+            document.getElementById('captchaError').style.display = 'block';
+            generateCaptcha();
+            return;
+        }
+
+        // Generate dynamic transaction ID
+        const randomTxn = 'NBS' + Date.now().toString().slice(-8) + Math.floor(1000 + Math.random() * 9000);
+        const currentDate = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+
+        // Populate receipt details
+        document.getElementById('res-txn-id').innerText = randomTxn;
+        document.getElementById('res-name').innerText = document.getElementById('fullName').value.trim();
+        document.getElementById('res-app').innerText = document.getElementById('appNo').value.trim();
+        document.getElementById('res-mobile').innerText = document.getElementById('mobileNo').value.trim();
+        document.getElementById('res-date').innerText = currentDate;
+
+        // Switch screens
+        document.getElementById('payment-screen').style.display = 'none';
+        document.getElementById('receipt-screen').style.display = 'block';
+    }
+
+    // Reset page to return to login/payment state
+    function resetForm() {
+        document.getElementById('paymentForm').reset();
+        document.getElementById('receipt-screen').style.display = 'none';
+        document.getElementById('payment-screen').style.display = 'block';
+        generateCaptcha();
+    }
+
+    // Initialize captcha on load
+    window.onload = generateCaptcha;
+</script>
+
+</body>
+</html>
